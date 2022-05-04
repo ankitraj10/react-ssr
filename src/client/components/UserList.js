@@ -5,12 +5,10 @@ import { connect } from "react-redux";
 const UserList = ({ users, fetchUser }) => {
   useEffect(() => {
     fetchUser();
-    console.log("fetch user", fetchUser);
   }, []);
 
   const renderUser = (users) => {
     return users.map((item, index) => {
-      console.log("user list", users, item);
       return <li key={item.id}>{item.name}</li>;
     });
   };
@@ -22,8 +20,14 @@ const UserList = ({ users, fetchUser }) => {
   );
 };
 
+const loadData = (store) => {
+  return store.dispatch(fetchUser());
+};
+
 const mapStateToProps = (state) => {
   return { users: state.users };
 };
+
+export { loadData };
 
 export default connect(mapStateToProps, { fetchUser })(UserList);
