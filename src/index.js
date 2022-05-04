@@ -1,27 +1,14 @@
 // const express = require("express");
 import express from "express";
-import React from "react";
-// const renderToString = require("react-dom/server").renderToString;
-import { renderToString } from "react-dom/server";
-import Home from "./client/components/Home";
+import createStore from "./helpers/createStore";
 const app = express();
+import renderer from "./helpers/renderer";
 
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-  const content = renderToString(<Home />);
-
-  const html = `
-  <html>
-  <head>
-  </head>
-  <body id="root">
-  ${content}
-  </body>
-  <script src="bundle.js"></script>
-  </html>
-  `;
-  res.send(html);
+app.get("*", (req, res) => {
+  const store = createStore();
+  res.send(renderer(req, store));
 });
 
 app.listen(3000, () => {
