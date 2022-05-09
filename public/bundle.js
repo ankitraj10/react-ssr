@@ -8425,7 +8425,9 @@ var _reactRouterConfig = __webpack_require__(467);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var store = (0, _redux.createStore)(_reducers2.default, {}, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+var initialState = window && window.initialState ? window.initialState : "hii";
+var store = (0, _redux.createStore)(_reducers2.default, window.initialState, (0, _redux.applyMiddleware)(_reduxThunk2.default));
+console.log("loading data", window.initialState, initialState);
 _reactDom2.default.hydrate(_react2.default.createElement(
   _reactRedux.Provider,
   { store: store },
@@ -47835,6 +47837,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(8);
 
 var _react2 = _interopRequireDefault(_react);
@@ -47853,11 +47857,9 @@ exports.default = [{
   path: "/",
   component: _Home2.default,
   exact: true
-}, {
-  loadData: _UserList.loadData,
-  path: "/users",
-  component: _UserList2.default
-}];
+}, _extends({}, _UserList2.default, {
+  path: "/users"
+})];
 
 /***/ }),
 /* 390 */
@@ -47906,7 +47908,6 @@ exports.default = Home;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadData = undefined;
 
 var _react = __webpack_require__(8);
 
@@ -47923,6 +47924,7 @@ var UserList = function UserList(_ref) {
       fetchUser = _ref.fetchUser;
 
   (0, _react.useEffect)(function () {
+    console.log("loading data", users);
     fetchUser();
   }, []);
 
@@ -47956,8 +47958,12 @@ var mapStateToProps = function mapStateToProps(state) {
   return { users: state.users };
 };
 
-exports.loadData = loadData;
-exports.default = (0, _reactRedux.connect)(mapStateToProps, { fetchUser: _actions.fetchUser })(UserList);
+// export { loadData };
+
+exports.default = {
+  loadData: loadData,
+  component: (0, _reactRedux.connect)(mapStateToProps, { fetchUser: _actions.fetchUser })(UserList)
+};
 
 /***/ }),
 /* 392 */

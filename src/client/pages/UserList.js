@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 const UserList = ({ users, fetchUser }) => {
   useEffect(() => {
+    console.log("loading data", users);
     fetchUser();
   }, []);
 
@@ -28,6 +29,9 @@ const mapStateToProps = (state) => {
   return { users: state.users };
 };
 
-export { loadData };
+// export { loadData };
 
-export default connect(mapStateToProps, { fetchUser })(UserList);
+export default {
+  loadData,
+  component: connect(mapStateToProps, { fetchUser })(UserList),
+};

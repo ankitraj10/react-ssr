@@ -141,31 +141,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Home = __webpack_require__(17);
+
+var _Home2 = _interopRequireDefault(_Home);
+
+var _UserList = __webpack_require__(18);
+
+var _UserList2 = _interopRequireDefault(_UserList);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Home = function Home() {
-  return _react2.default.createElement(
-    "div",
-    null,
-    _react2.default.createElement(
-      "div",
-      null,
-      "home"
-    ),
-    _react2.default.createElement(
-      "button",
-      { onClick: function onClick() {
-          return console.log("clicked");
-        } },
-      "Click me"
-    )
-  );
-};
-exports.default = Home;
+exports.default = [{
+  path: "/",
+  component: _Home2.default,
+  exact: true
+}, _extends({}, _UserList2.default, {
+  path: "/users"
+})];
 
 /***/ }),
 /* 4 */
@@ -202,7 +200,7 @@ var _renderer2 = _interopRequireDefault(_renderer);
 
 var _reactRouterConfig = __webpack_require__(5);
 
-var _Routes = __webpack_require__(17);
+var _Routes = __webpack_require__(3);
 
 var _Routes2 = _interopRequireDefault(_Routes);
 
@@ -268,7 +266,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = function () {
   var store = (0, _redux.createStore)(_reducers2.default, {}, (0, _redux.applyMiddleware)(_reduxThunk2.default));
-  console.log("user 1", store.getState);
   return store;
 };
 
@@ -350,19 +347,19 @@ var _react2 = _interopRequireDefault(_react);
 
 var _server = __webpack_require__(15);
 
-var _Home = __webpack_require__(3);
-
-var _Home2 = _interopRequireDefault(_Home);
-
 var _reactRouterDom = __webpack_require__(16);
 
-var _Routes = __webpack_require__(17);
+var _Routes = __webpack_require__(3);
 
 var _Routes2 = _interopRequireDefault(_Routes);
 
 var _reactRedux = __webpack_require__(4);
 
 var _reactRouterConfig = __webpack_require__(5);
+
+var _serializeJavascript = __webpack_require__(19);
+
+var _serializeJavascript2 = _interopRequireDefault(_serializeJavascript);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -381,7 +378,7 @@ exports.default = function (req, store) {
     )
   ));
 
-  return "\n  <html>\n  <head>\n  </head>\n  <body id=\"root\">\n  " + content + "\n  </body>\n  <script src=\"bundle.js\"></script>\n  </html>\n  ";
+  return "\n  <html>\n  <head>\n  </head>\n  <body>\n        <div id=\"root\">" + content + "</div>\n        <script>\n           window.initialState = " + (0, _serializeJavascript2.default)(store.getState()) + "\n        </script>\n        <script src=\"bundle.js\"></script>\n      </body>\n  </html>\n  ";
 };
 
 /***/ }),
@@ -411,25 +408,27 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Home = __webpack_require__(3);
-
-var _Home2 = _interopRequireDefault(_Home);
-
-var _UserList = __webpack_require__(18);
-
-var _UserList2 = _interopRequireDefault(_UserList);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = [{
-  path: "/",
-  component: _Home2.default,
-  exact: true
-}, {
-  loadData: _UserList.loadData,
-  path: "/users",
-  component: _UserList2.default
-}];
+var Home = function Home() {
+  return _react2.default.createElement(
+    "div",
+    null,
+    _react2.default.createElement(
+      "div",
+      null,
+      "home"
+    ),
+    _react2.default.createElement(
+      "button",
+      { onClick: function onClick() {
+          return console.log("clicked");
+        } },
+      "Click me"
+    )
+  );
+};
+exports.default = Home;
 
 /***/ }),
 /* 18 */
@@ -441,7 +440,6 @@ exports.default = [{
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadData = undefined;
 
 var _react = __webpack_require__(0);
 
@@ -458,6 +456,7 @@ var UserList = function UserList(_ref) {
       fetchUser = _ref.fetchUser;
 
   (0, _react.useEffect)(function () {
+    console.log("loading data", users);
     fetchUser();
   }, []);
 
@@ -491,8 +490,18 @@ var mapStateToProps = function mapStateToProps(state) {
   return { users: state.users };
 };
 
-exports.loadData = loadData;
-exports.default = (0, _reactRedux.connect)(mapStateToProps, { fetchUser: _actions.fetchUser })(UserList);
+// export { loadData };
+
+exports.default = {
+  loadData: loadData,
+  component: (0, _reactRedux.connect)(mapStateToProps, { fetchUser: _actions.fetchUser })(UserList)
+};
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+module.exports = require("serialize-javascript");
 
 /***/ })
 /******/ ]);
